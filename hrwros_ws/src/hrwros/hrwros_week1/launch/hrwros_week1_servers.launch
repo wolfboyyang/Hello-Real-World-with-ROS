@@ -3,21 +3,12 @@
   <!-- Argument to the launch file.-->
   <arg name="counter_delay_parameter" default="1.0"/>
 
-<<<<<<< HEAD
-  <!-- Start the metres_to_feet service server node.-->
+  <!-- Start the metres_to_feet service server ROS node.-->
   <node name="metres_to_feet" pkg="hrwros_week1" exec="metres_to_feet_server"
     output="screen"/>
 
-  <!-- Start the counter with delay action server node /-->
-  <node name="counter_with_delay" pkg="hrwros_week1" exec="counter_with_delay_as"
-=======
-  <!-- Start the metres_to_feet service server ROS node.-->
-  <node name="metres_to_feet" pkg="hrwros_week1" type="metres_to_feet_server.py"
-    output="screen"/>
-
   <!-- Start the action server ROS node if the start_as argument is true /-->
-  <node name="counter_with_delay" pkg="hrwros_week1" type="counter_with_delay_as.py"
->>>>>>> main
+  <node name="counter_with_delay" pkg="hrwros_week1" exec="counter_with_delay_as"
     output="screen">
     <param name="counter_delay" value="$(var counter_delay_parameter)"/>
   </node>

@@ -50,19 +50,14 @@ class CounterWithDelayActionServer(Node):
         return CancelResponse.ACCEPT
     
     async def execute_callback(self, goal_handle):
-
-        counter_delay_value = 1.0
-        # Assignment 3 - Part3
-        # modify counter delay using a private parameter .
-        # Uncomment the following lines (37-41) and modify them acordingly
-
-        # if rospy.has_param("<write your code here>"):
-        #     counter_delay_value = rospy.get_param("<write your code here>")
-        #     rospy.loginfo("Parameter %s was found on the parameter server. Using %fs for counter delay."%("counter_delay", counter_delay_value))
+        # OPTIONAL: NOT GRADED Check if the parameter for the counter delay is available on the parameter server.
+        # if not self.has_param("<write your code here>"):
+        #     self.get_logger().info("Parameter %s not found on the parameter server. Using default value of 1.0s for counter delay.","counter_delay")
+        #     counter_delay_value = 1.0
         # else:
-        #     rospy.loginfo("Parameter %s not found on the parameter server. Using default value of 1.0s for counter delay.","counter_delay")
-
-        #  End of Assignment 3 - Part3
+        # Get the parameter for delay between counts.
+        counter_delay_value = self.get_param("<write your code here>")
+        self.get_logger().info("Parameter %s was found on the parameter server. Using %fs for counter delay."%("counter_delay", counter_delay_value))
 
         # Variable for delay
         # Keep in mind a rate is in units 1/sec or Hz

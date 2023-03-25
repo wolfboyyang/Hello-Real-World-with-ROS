@@ -44,21 +44,16 @@ import rclpy
 
 from hrwros_msgs.msg import SensorInformation
 
-def sensorInfoCallback(data):
-    rospy.loginfo('Distance reading from the sensor is: %f', data.sensor_data.range)
-
-<<<<<<< HEAD:hrwros_ws/src/hrwros/hrwros_week1/hrwros_week1/sensor_info_subscriber.py
 
 def main(args=None):
     rclpy.init(args=args)
-=======
-def sensorInfoListener():
->>>>>>> main:hrwros_ws/src/hrwros/hrwros_week1/scripts/sensor_info_subscriber.py
 
     node = rclpy.create_node('sensor_info_subscriber')
 
     subscription = node.create_subscription(
-        SensorInformation, 'sensor_info', lambda data: node.get_logger().info('Distance reading from the sensor is: %f', data.sensor_data.range), 10)
+        SensorInformation, 'sensor_info',
+        lambda data: node.get_logger().info('Distance reading from the sensor is: %f',
+        data.sensor_data.range), 10)
     subscription  # prevent unused variable warning
 
     rclpy.spin(node)
@@ -68,6 +63,7 @@ def sensorInfoListener():
     # when the garbage collector destroys the node object)
     node.destroy_node()
     rclpy.shutdown()
+
 
 if __name__ == '__main__':
     main()

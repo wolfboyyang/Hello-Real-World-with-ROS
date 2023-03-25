@@ -11,6 +11,7 @@ from hrwros_msgs.srv import ConvertMetresToFeet, ConvertMetresToFeetRequest, Con
 
 g_node = None
 
+
 def metres_to_feet_client(x):
     cli = g_node.create_client(ConvertMetresToFeet, 'metres_to_feet')
     # First wait for the service to become available.

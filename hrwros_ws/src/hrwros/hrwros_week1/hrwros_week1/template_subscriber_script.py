@@ -44,16 +44,9 @@ import rclpy
 
 from std_msgs.msg import String
 
-def stringListenerCallback(data):
-    rospy.loginfo('%s', data.data)
-
-<<<<<<< HEAD:hrwros_ws/src/hrwros/hrwros_week1/hrwros_week1/template_subscriber_script.py
 
 def main(args=None):
     rclpy.init(args=args)
-=======
-def stringListener():
->>>>>>> main:hrwros_ws/src/hrwros/hrwros_week1/scripts/template_subscriber_script.py
 
     node = rclpy.create_node('node_2')
 

@@ -45,20 +45,11 @@ import rclpy
 from hrwros_msgs.msg import SensorInformation
 from hrwros_utilities.sim_sensor_data import distSensorData as getSensorData
 
-<<<<<<< HEAD:hrwros_ws/src/hrwros/hrwros_week1/hrwros_week1/sensor_info_publisher.py
 
 def main(args=None):
     rclpy.init(args=args)
     node = rclpy.create_node('sensor_info_publisher')
     si_publisher = node.create_publisher(SensorInformation, 'sensor_info', 10)
-
-    rate = rospy.Rate(1)
-=======
-def sensorInfoPublisher():
-    si_publisher = rospy.Publisher('sensor_info', SensorInformation, queue_size = 10)
-    rospy.init_node('sensor_info_publisher', anonymous=False)
-    rate = rospy.Rate(10)
->>>>>>> main:hrwros_ws/src/hrwros/hrwros_week1/scripts/sensor_info_publisher.py
 
     # Create a new SensorInformation object and fill in its contents.
     sensor_info = SensorInformation()
@@ -88,8 +79,7 @@ def sensorInfoPublisher():
         rnode.get_logger().info('All went well. Publishing topic')
         rate.sleep()
 
-<<<<<<< HEAD:hrwros_ws/src/hrwros/hrwros_week1/hrwros_week1/sensor_info_publisher.py
-    timer_period = 0.5  # seconds
+    timer_period = 0.1  # seconds
     timer = node.create_timer(timer_period, timer_callback)
 
     rclpy.spin(node)
@@ -102,7 +92,5 @@ def sensorInfoPublisher():
     rclpy.shutdown()
 
 
-=======
->>>>>>> main:hrwros_ws/src/hrwros/hrwros_week1/scripts/sensor_info_publisher.py
 if __name__ == '__main__':
     main()

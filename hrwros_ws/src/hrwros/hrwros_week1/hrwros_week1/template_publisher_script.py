@@ -45,7 +45,6 @@ import rclpy
 
 from std_msgs.msg import String
 
-<<<<<<< HEAD:hrwros_ws/src/hrwros/hrwros_week1/hrwros_week1/template_publisher_script.py
 
 def main(args=None):
     rclpy.init(args=args)
@@ -55,20 +54,12 @@ def main(args=None):
     
     topic1_content = String()
     topic1_content.data = 'Welcome to Hello (Real) World with ROS!!!'
-=======
-def simplePublisher():
-    simple_publisher = rospy.Publisher('topic_1', String, queue_size = 10)
-    rospy.init_node('node_1', anonymous=False)
-    rate = rospy.Rate(10)
-
-    topic1_content = "Welcome to Hello (Real) World with ROS!!!"
->>>>>>> main:hrwros_ws/src/hrwros/hrwros_week1/scripts/template_publisher_script.py
 
     def timer_callback():
         node.get_logger().info('Publishing: "%s"' % topic1_content.data)
         simple_publisher.publish(topic1_content)
 
-    timer_period = 1  # seconds
+    timer_period = 0.1  # seconds
     timer = node.create_timer(timer_period, timer_callback)
 
     rclpy.spin(node)

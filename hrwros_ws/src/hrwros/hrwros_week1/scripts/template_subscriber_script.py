@@ -35,7 +35,13 @@
 
 # Node to subscribe to a string topic.
 
-import rospy
+# this code is based on
+# https://github.com/ros2/examples/
+# rclpy/topics/minimal_subscriber/examples_rclpy_minimal_subscriber/
+# subscriber_lambda.py
+
+import rclpy
+
 from std_msgs.msg import String
 
 
@@ -44,20 +50,23 @@ def stringListenerCallback(data):
     rospy.loginfo('%s', data.data)
 
 
-def stringListener():
+def main(args=None):
+    rclpy.init(args=args)
 
-    # In ROS, nodes are uniquely named. If two nodes with the same
-    # name are launched, the previous one is kicked off. The
-    # anonymous=True flag means that rospy will choose a unique
-    # name for our 'stringListener' node so that multiple listeners can
-    # run simultaneously.
-    rospy.init_node('node_2', anonymous=False)
+    node = rclpy.create_node('node_2')
 
-    rospy.Subscriber('topic_1', String, stringListenerCallback)
+    subscription = node.create_subscription(
+        String, 'topic_1', lambda msg: node.get_logger().info('%s' % msg.data), 10)
+    subscription  # prevent unused variable warning
 
-    # spin() simply keeps python from exiting until this node is stopped
-    rospy.spin()
+    rclpy.spin(node)
+
+    # Destroy the node explicitly
+    # (optional - otherwise it will be done automatically
+    # when the garbage collector destroys the node object)
+    node.destroy_node()
+    rclpy.shutdown()
 
 
 if __name__ == '__main__':
-    stringListener()
+    main()

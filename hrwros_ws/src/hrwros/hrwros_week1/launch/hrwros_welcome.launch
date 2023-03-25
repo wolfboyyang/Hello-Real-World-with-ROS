@@ -2,11 +2,11 @@
 <launch>
 
   <!-- Start the template publisher ROS node.-->
-  <node name="node_1" pkg="hrwros_week1" type="template_publisher_script.py"
+  <node name="node_1" pkg="hrwros_week1" exec="template_publisher_script"
     output="screen"/>
 
   <!-- Start the template subscriber ROS node.-->
-  <node name="node_2" pkg="hrwros_week1" type="template_subscriber_script.py"
+  <node name="node_2" pkg="hrwros_week1" exec="template_subscriber_script"
     output="screen"/>
 </launch>
 

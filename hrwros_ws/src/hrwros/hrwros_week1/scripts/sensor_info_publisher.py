@@ -35,14 +35,22 @@
 
 # Node to publish to a string topic.
 
-import rospy
+# this code is based on
+# https://github.com/ros2/examples/
+# rclpy/topics/minimal_publisher/examples_rclpy_minimal_publisher/
+# publisher_local_function.py
+
+import rclpy
+
 from hrwros_msgs.msg import SensorInformation
 from hrwros_utilities.sim_sensor_data import distSensorData as getSensorData
 
 
-def sensorInfoPublisher():
-    si_publisher = rospy.Publisher('sensor_info', SensorInformation, queue_size=10)
-    rospy.init_node('sensor_info_publisher', anonymous=False)
+def main(args=None):
+    rclpy.init(args=args)
+    node = rclpy.create_node('sensor_info_publisher')
+    si_publisher = node.create_publisher(SensorInformation, 'sensor_info', 10)
+
     rate = rospy.Rate(1)
 
     # Create a new SensorInformation object and fill in its contents.
@@ -62,7 +70,7 @@ def sensorInfoPublisher():
     sensor_info.maker_name = 'The Ultrasound Company'
     sensor_info.part_number = 123456
 
-    while not rospy.is_shutdown():
+    def timer_callback():
         # Read the sensor data from a simulated sensor.
         sensor_info.sensor_data.range = getSensorData(sensor_info.sensor_data.radiation_type,
             sensor_info.sensor_data.min_range, sensor_info.sensor_data.max_range)
@@ -70,12 +78,21 @@ def sensorInfoPublisher():
         # Publish the sensor information on the /sensor_info topic.
         si_publisher.publish(sensor_info)
         # Print log message if all went well.
-        rospy.loginfo("All went well. Publishing topic ")
+        rnode.get_logger().info('All went well. Publishing topic')
         rate.sleep()
+
+    timer_period = 0.5  # seconds
+    timer = node.create_timer(timer_period, timer_callback)
+
+    rclpy.spin(node)
+
+    # Destroy the timer attached to the node explicitly
+    # (optional - otherwise it will be done automatically
+    # when the garbage collector destroys the node object)
+    node.destroy_timer(timer)
+    node.destroy_node()
+    rclpy.shutdown()
 
 
 if __name__ == '__main__':
-    try:
-        sensorInfoPublisher()
-    except rospy.ROSInterruptException:
-        pass
+    main()

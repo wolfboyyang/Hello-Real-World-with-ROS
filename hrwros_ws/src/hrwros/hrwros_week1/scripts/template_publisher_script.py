@@ -36,25 +36,41 @@
 
 # Node to publish to a string topic.
 
-import rospy
+# this code is based on
+# https://github.com/ros2/examples/
+# rclpy/topics/minimal_publisher/examples_rclpy_minimal_publisher/
+# publisher_local_function.py
+
+import rclpy
+
 from std_msgs.msg import String
 
 
-def simplePublisher():
-    simple_publisher = rospy.Publisher('topic_1', String, queue_size=10)
-    rospy.init_node('node_1', anonymous=False)
-    rate = rospy.Rate(1)
+def main(args=None):
+    rclpy.init(args=args)
 
-    # The string to be published on the topic
-    topic1_content = "Welcome to Hello (Real) World with ROS!!!"
+    node = rclpy.create_node('node_1')
+    simple_publisher = node.create_publisher(String, 'topic_1', 10)
+    
+    topic1_content = String()
+    topic1_content.data = 'Welcome to Hello (Real) World with ROS!!!'
 
-    while not rospy.is_shutdown():
+    def timer_callback():
+        node.get_logger().info('Publishing: "%s"' % topic1_content.data)
         simple_publisher.publish(topic1_content)
-        rate.sleep()
+
+    timer_period = 1  # seconds
+    timer = node.create_timer(timer_period, timer_callback)
+
+    rclpy.spin(node)
+
+    # Destroy the timer attached to the node explicitly
+    # (optional - otherwise it will be done automatically
+    # when the garbage collector destroys the node object)
+    node.destroy_timer(timer)
+    node.destroy_node()
+    rclpy.shutdown()
 
 
 if __name__ == '__main__':
-    try:
-        simplePublisher()
-    except rospy.ROSInterruptException:
-        pass
+    main()

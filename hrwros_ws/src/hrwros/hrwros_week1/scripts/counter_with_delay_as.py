@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#! /usr/bin/env python
 
 # This code has been adapted from the ROS Wiki actionlib tutorials to the context
 # of this course.
@@ -10,9 +10,8 @@ import actionlib
 
 from hrwros_msgs.msg import CounterWithDelayAction, CounterWithDelayFeedback, CounterWithDelayResult
 
-
 class CounterWithDelayActionClass(object):
-    # Create messages that are used to publish feedback/result
+    # create messages that are used to publish feedback/result
     _feedback = CounterWithDelayFeedback()
     _result = CounterWithDelayResult()
 
@@ -29,24 +28,14 @@ class CounterWithDelayActionClass(object):
         rospy.loginfo("Action server started...")
 
     def execute_cb(self, goal):
-
-        counter_delay_value = 1.0
-        # Assignment 3 - Part3
-        # modify counter delay using a private parameter .
-        # Uncomment the following lines (37-41) and modify them acordingly
-
-        # if rospy.has_param("<write your code here>"):
-        #     counter_delay_value = rospy.get_param("<write your code here>")
-        #     rospy.loginfo("Parameter %s was found on the parameter server. Using %fs for counter delay."%("counter_delay", counter_delay_value))
-        # else:
+        # OPTIONAL: NOT GRADED Check if the parameter for the counter delay is available on the parameter server.
+        # if not rospy.has_param("<write your code here>"):
         #     rospy.loginfo("Parameter %s not found on the parameter server. Using default value of 1.0s for counter delay.","counter_delay")
-
-        #  End of Assignment 3 - Part3
-
-        # Variable for delay
-        # Keep in mind a rate is in units 1/sec or Hz
-        # We convert the counter_delay_value from seconds to Hz
-        delay_rate = rospy.Rate(1/counter_delay_value)
+        #     counter_delay = 1.0
+        # else:
+        # Get the parameter for delay between counts.
+        counter_delay_value = rospy.get_param("<write your code here>")
+        rospy.loginfo("Parameter %s was found on the parameter server. Using %fs for counter delay."%("counter_delay", counter_delay_value))
 
         # Variable to decide the final state of the action server.
         success = True
@@ -54,26 +43,24 @@ class CounterWithDelayActionClass(object):
         # publish info to the console for the user
         rospy.loginfo('%s action server is counting up to  %i with %fs delay between each count' % (self._action_name, goal.num_counts, counter_delay_value))
 
-        # Start executing the action
+        # start executing the action
         for counter_idx in range(0, goal.num_counts):
-            # Check that preempt has not been requested by the client
+            # check that preempt has not been requested by the client
             if self._as.is_preempt_requested():
                 rospy.loginfo('%s: Preempted' % self._action_name)
                 self._as.set_preempted()
                 success = False
                 break
-            # Publish the feedback
+            # publish the feedback
             self._feedback.counts_elapsed = counter_idx
             self._as.publish_feedback(self._feedback)
-            # Wait for counter_delay seconds before incrementing the counter.
-            # If the rate is 5Hz, this will sleep for 1/5=0.2 seconds.
-            delay_rate.sleep()
+            # Wait for counter_delay s before incrementing the counter.
+            <write your code here>
 
         if success:
             self._result.result_message = "Successfully completed counting."
             rospy.loginfo('%s: Succeeded' % self._action_name)
             self._as.set_succeeded(self._result)
-
 
 if __name__ == '__main__':
     # Initialize a ROS node for this action server.

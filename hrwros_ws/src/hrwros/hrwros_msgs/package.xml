@@ -3,7 +3,7 @@
   <name>hrwros_msgs</name>
   <version>0.0.0</version>
   <description>Messages, Services and Actions for the hrwros ROS packages</description>
-  <maintainer email="noreply@hrwros.mooc">HRWROS mooc maintainers</maintainer>
+  <maintainer email="bruce@wayne.ba">Mukunda Bharatheesha</maintainer>
   <author email="bruce@wayne.ba">Mukunda Bharatheesha</author>
   <license>BSD</license>
 

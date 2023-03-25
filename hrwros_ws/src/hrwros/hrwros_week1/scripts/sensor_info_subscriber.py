@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # Software License Agreement (BSD License)
 #
 # Copyright (c) 2008, Willow Garage, Inc.
@@ -33,15 +33,13 @@
 #
 # Revision $Id$
 
-# Node to subscribe the sensor information topic and print distance data.
+## Node to subscribe the sensor information topic and print distance data.
 
 import rospy
 from hrwros_msgs.msg import SensorInformation
 
-
 def sensorInfoCallback(data):
     rospy.loginfo('Distance reading from the sensor is: %f', data.sensor_data.range)
-
 
 def sensorInfoListener():
 
@@ -56,7 +54,6 @@ def sensorInfoListener():
 
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
-
 
 if __name__ == '__main__':
     sensorInfoListener()

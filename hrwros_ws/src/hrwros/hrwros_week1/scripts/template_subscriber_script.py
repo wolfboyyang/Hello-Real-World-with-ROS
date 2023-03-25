@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # Software License Agreement (BSD License)
 #
 # Copyright (c) 2008, Willow Garage, Inc.
@@ -33,16 +33,13 @@
 #
 # Revision $Id$
 
-# Node to subscribe to a string topic.
+## Node to subscribe to a string topic.
 
 import rospy
 from std_msgs.msg import String
 
-
-# Topic callback function.
 def stringListenerCallback(data):
     rospy.loginfo('%s', data.data)
-
 
 def stringListener():
 
@@ -57,7 +54,6 @@ def stringListener():
 
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
-
 
 if __name__ == '__main__':
     stringListener()

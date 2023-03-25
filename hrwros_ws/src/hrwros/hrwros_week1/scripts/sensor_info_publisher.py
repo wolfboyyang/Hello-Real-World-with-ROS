@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # Software License Agreement (BSD License)
 #
 # Copyright (c) 2008, Willow Garage, Inc.
@@ -33,17 +33,16 @@
 #
 # Revision $Id$
 
-# Node to publish to a string topic.
+## Node to publish to a string topic.
 
 import rospy
 from hrwros_msgs.msg import SensorInformation
 from hrwros_utilities.sim_sensor_data import distSensorData as getSensorData
 
-
 def sensorInfoPublisher():
-    si_publisher = rospy.Publisher('sensor_info', SensorInformation, queue_size=10)
+    si_publisher = rospy.Publisher('sensor_info', SensorInformation, queue_size = 10)
     rospy.init_node('sensor_info_publisher', anonymous=False)
-    rate = rospy.Rate(1)
+    rate = rospy.Rate(10)
 
     # Create a new SensorInformation object and fill in its contents.
     sensor_info = SensorInformation()
@@ -54,9 +53,9 @@ def sensorInfoPublisher():
 
     # Fill in the sensor data information.
     sensor_info.sensor_data.radiation_type = sensor_info.sensor_data.ULTRASOUND
-    sensor_info.sensor_data.field_of_view = 0.5  # Field of view of the sensor in rad.
-    sensor_info.sensor_data.min_range = 0.02  # Minimum distance range of the sensor in m.
-    sensor_info.sensor_data.max_range = 2.0  # Maximum distance range of the sensor in m.
+    sensor_info.sensor_data.field_of_view = 0.5 # Field of view of the sensor in rad.
+    sensor_info.sensor_data.min_range = 0.02 # Minimum distance range of the sensor in m.
+    sensor_info.sensor_data.max_range = 2.0 # Maximum distance range of the sensor in m.
 
     # Fill in the manufacturer name and part number.
     sensor_info.maker_name = 'The Ultrasound Company'
@@ -72,7 +71,6 @@ def sensorInfoPublisher():
         # Print log message if all went well.
         rospy.loginfo("All went well. Publishing topic ")
         rate.sleep()
-
 
 if __name__ == '__main__':
     try:

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # Software License Agreement (BSD License)
 #
@@ -34,7 +34,7 @@
 #
 # Revision $Id$
 
-# Node to publish to a string topic.
+## Node to publish to a string topic.
 
 # this code is based on
 # https://github.com/ros2/examples/
@@ -45,6 +45,7 @@ import rclpy
 
 from std_msgs.msg import String
 
+<<<<<<< HEAD:hrwros_ws/src/hrwros/hrwros_week1/hrwros_week1/template_publisher_script.py
 
 def main(args=None):
     rclpy.init(args=args)
@@ -54,6 +55,14 @@ def main(args=None):
     
     topic1_content = String()
     topic1_content.data = 'Welcome to Hello (Real) World with ROS!!!'
+=======
+def simplePublisher():
+    simple_publisher = rospy.Publisher('topic_1', String, queue_size = 10)
+    rospy.init_node('node_1', anonymous=False)
+    rate = rospy.Rate(10)
+
+    topic1_content = "Welcome to Hello (Real) World with ROS!!!"
+>>>>>>> main:hrwros_ws/src/hrwros/hrwros_week1/scripts/template_publisher_script.py
 
     def timer_callback():
         node.get_logger().info('Publishing: "%s"' % topic1_content.data)
@@ -70,7 +79,6 @@ def main(args=None):
     node.destroy_timer(timer)
     node.destroy_node()
     rclpy.shutdown()
-
 
 if __name__ == '__main__':
     main()

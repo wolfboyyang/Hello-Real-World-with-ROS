@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # Software License Agreement (BSD License)
 #
 # Copyright (c) 2008, Willow Garage, Inc.
@@ -33,7 +33,7 @@
 #
 # Revision $Id$
 
-# Node to subscribe the sensor information topic and print distance data.
+## Node to subscribe the sensor information topic and print distance data.
 
 # this code is based on
 # https://github.com/ros2/examples/
@@ -44,13 +44,16 @@ import rclpy
 
 from hrwros_msgs.msg import SensorInformation
 
-
 def sensorInfoCallback(data):
     rospy.loginfo('Distance reading from the sensor is: %f', data.sensor_data.range)
 
+<<<<<<< HEAD:hrwros_ws/src/hrwros/hrwros_week1/hrwros_week1/sensor_info_subscriber.py
 
 def main(args=None):
     rclpy.init(args=args)
+=======
+def sensorInfoListener():
+>>>>>>> main:hrwros_ws/src/hrwros/hrwros_week1/scripts/sensor_info_subscriber.py
 
     node = rclpy.create_node('sensor_info_subscriber')
 
@@ -65,7 +68,6 @@ def main(args=None):
     # when the garbage collector destroys the node object)
     node.destroy_node()
     rclpy.shutdown()
-
 
 if __name__ == '__main__':
     main()

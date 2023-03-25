@@ -1,5 +1,4 @@
-#!/usr/bin/env python3
-
+#!/usr/bin/env python
 # This code has been adapted from the ROS Wiki ROS Service tutorials to the context
 # of this course.
 # (http://wiki.ros.org/ROS/Tutorials/WritingServiceClient%28python%29)
@@ -10,9 +9,13 @@ import rclpy
 
 import numpy as np
 
+<<<<<<< HEAD:hrwros_ws/src/hrwros/hrwros_week1/hrwros_week1/metres_to_feet_server.py
 _CONVERSION_FACTOR_METRES_TO_FEET = 3.28  # Metres -> Feet conversion factor.
 
 g_node = None
+=======
+_CONVERSION_FACTOR_METRES_TO_FEET = 3.28 # Metres -> Feet conversion factor.
+>>>>>>> main:hrwros_ws/src/hrwros/hrwros_week1/scripts/metres_to_feet_server.py
 
 # Service callback function.
 def process_service_request(req):
@@ -24,11 +27,12 @@ def process_service_request(req):
     # Compose the response message accordingly.
     if(req.distance_metres < 0):
         res.success = False
-        res.distance_feet = -np.Inf  # Default error value.
+        res.distance_feet = -np.Inf # Default error value.
     else:
         res.distance_feet = _CONVERSION_FACTOR_METRES_TO_FEET * req.distance_metres
         res.success = True
 
+<<<<<<< HEAD:hrwros_ws/src/hrwros/hrwros_week1/hrwros_week1/metres_to_feet_server.py
     rate = g_node.create_rate(1)
     for test_idx in range(0,10):
         rate.sleep()
@@ -43,6 +47,14 @@ def main(args=None):
 
     # ROS node for the service server.
     g_node = rclpy.create_node('metres_to_feet_server')
+=======
+    #Return the response message.
+    return res
+
+def metres_to_feet_server():
+    # ROS node for the service server.
+    rospy.init_node('metres_to_feet_server', anonymous = False)
+>>>>>>> main:hrwros_ws/src/hrwros/hrwros_week1/scripts/metres_to_feet_server.py
 
     # Create a ROS service type.
     service = g_node.create_service(ConvertMetresToFeet, 'metres_to_feet', process_service_request)
@@ -57,7 +69,6 @@ def main(args=None):
     # when the garbage collector destroys the node object)
     g_node.destroy_service(srv)
     rclpy.shutdown()
-
 
 if __name__ == "__main__":
     main()

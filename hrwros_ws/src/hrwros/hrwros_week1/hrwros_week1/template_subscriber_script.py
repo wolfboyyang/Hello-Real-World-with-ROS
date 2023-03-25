@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # Software License Agreement (BSD License)
 #
 # Copyright (c) 2008, Willow Garage, Inc.
@@ -33,7 +33,7 @@
 #
 # Revision $Id$
 
-# Node to subscribe to a string topic.
+## Node to subscribe to a string topic.
 
 # this code is based on
 # https://github.com/ros2/examples/
@@ -44,14 +44,16 @@ import rclpy
 
 from std_msgs.msg import String
 
-
-# Topic callback function.
 def stringListenerCallback(data):
     rospy.loginfo('%s', data.data)
 
+<<<<<<< HEAD:hrwros_ws/src/hrwros/hrwros_week1/hrwros_week1/template_subscriber_script.py
 
 def main(args=None):
     rclpy.init(args=args)
+=======
+def stringListener():
+>>>>>>> main:hrwros_ws/src/hrwros/hrwros_week1/scripts/template_subscriber_script.py
 
     node = rclpy.create_node('node_2')
 
@@ -66,7 +68,6 @@ def main(args=None):
     # when the garbage collector destroys the node object)
     node.destroy_node()
     rclpy.shutdown()
-
 
 if __name__ == '__main__':
     main()

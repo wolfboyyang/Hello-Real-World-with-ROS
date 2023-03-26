@@ -42,10 +42,12 @@
 # height of the box is more than 10cm.
 
 # All necessary python imports go here.
-import rospy
+import rclpy
 
 # Import the correct type of message
 from hrwros_msgs.msg import <write-your-code-here-Part1>
+
+g_node = None
 
 
 def sensor_info_callback(data):
@@ -62,20 +64,33 @@ def sensor_info_callback(data):
     else:
         # If imlemented correctly only the height of boxes bigger than 0.1m
         # will be printed
-        rospy.loginfo('Height of box %0.3f' % height_box)
+        g_node.get_logger.loginfo('Height of box %0.3f' % height_box)
+
+
+def main(args=None):
+    rclpy.init(args=args)
+
+    # Initialize the ROS node here.
+    g_node = rclpy.create_node('compute_box_height')
+
+    # Wait for the topic that publishes sensor information to become available - Part1
+    g_node.get_logger.info('Waiting for topic %s to be published...', <use the correct topic name here>)
+    rclpy.wait_for_message(<use the correct message type here>, node, '<use the correct topic name here>')
+    g_node.get_logger.info('%s topic is now available!', <use the correct topic name here>)
+
+    # Create the subscriber for Part1 here
+    subscription = node.create_subscription(<use correct message type here>, '<use correct topic name here>', <use the correct callback name here>, bhi_publisher)
+    subscription
+
+    # Prevent this code from exiting until Ctrl+C is pressed.
+    rclpy.spin(node)
+
+    # Destroy the node explicitly
+    # (optional - otherwise it will be done automatically
+    # when the garbage collector destroys the node object)
+    node.destroy_node()
+    rclpy.shutdown()
 
 
 if __name__ == '__main__':
-    # Initialize the ROS node here.
-    rospy.init_node('compute_box_height', anonymous=False)
-
-    # Wait for the topic that publishes sensor information to become available - Part1
-    rospy.loginfo('Waiting for topic %s to be published...', <use the correct topic name here>)
-    rospy.wait_for_message('<use the correct topic name here>', <use the correct message type here>)
-    rospy.loginfo('%s topic is now available!', <use the correct topic name here>)
-
-    # Create the subscriber for Part1 here
-    rospy.Subscriber('<use correct topic name here>', <use correct message type here>, <use the correct callback name here>)
-
-    # Prevent this code from exiting until Ctrl+C is pressed.
-    rospy.spin()
+    main()

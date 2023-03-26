@@ -7,11 +7,6 @@ import rclpy
 from rclpy.action import ActionClient
 from rclpy.node import Node
 
-# Brings in the messages used by the CounterWithDelay action, including the
-# goal message and the result message.
-from hrwros_msgs.msg import CounterWithDelayAction, CounterWithDelayGoal
-
-
 def CounterWithDelayActionClient(Node):
 
     def __init__(self):

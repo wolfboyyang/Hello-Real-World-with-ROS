@@ -7,8 +7,10 @@
 # on a new message type ONLY if the height of the box is more than 10cm.
 
 # All necessary python imports go here.
-import rospy
+import rclpy
+
 from hrwros_msgs.msg import
+
 
 def sensor_info_callback(data, bhi_pub):
     # Compute the height of the box.
@@ -25,23 +27,37 @@ def sensor_info_callback(data, bhi_pub):
         # Publish box height using the publisher argument passed to the callback function.
         <write your code here>
 
-if __name__ == '__main__':
+
+def main(args=None):
+    rclpy.init(args=args)
+
     # Initialize the ROS node here.
-    rospy.init_node('compute_box_height', anonymous = False)
+    node = rclpy.create_node('compute_box_height')
 
     # Wait for the topic that publishes sensor information to become available.
-    rospy.loginfo('Waiting for topic %s to be published...', <use the correct topic name here>)
-    rospy.wait_for_message('<use the correct topic name here>', <use the correct message type here>)
-    rospy.loginfo('%s topic is now available!', <use the correct topic name here>)
+    node.get_logger.info('Waiting for topic %s to be published...', <use the correct topic name here>)
+    rclpy.wait_for_message(<use the correct message type here>, node, '<use the correct topic name here>')
+    node.get_logger.info('%s topic is now available!', <use the correct topic name here>)
 
     # Create the publisher and subscriber here.
-    bhi_publisher = rospy.Publisher('<use correct topic name here>', <use correct message type here>, queue_size=10)
+    bhi_publisher = node.create_publisher(<use correct message type here>, '<use correct topic name here>', 10)
     # Note here that an ADDITIONAL ARGUMENT (bhi_publisher) is passed to the subscriber. This is a way to pass
     # ONE additional argument to the subscriber callback. If you want to pass multiple arguments,
     # you can use a python dictionary. And if you don't want to use multiple arguments to the
     # subscriber callback then you can also consider using a Class Implementation like we saw in
     # the action server code illustration.
-    rospy.Subscriber('<use correct topic name here>', <use correct message type here>, <use the correct callback name here>, bhi_publisher)
+    subscription = node.create_subscription(<use correct message type here>, '<use correct topic name here>', <use the correct callback name here>, bhi_publisher)
+    subscription
 
     # Prevent this code from exiting until Ctrl+C is pressed.
-    rospy.spin()
+    rclpy.spin(node)
+
+    # Destroy the node explicitly
+    # (optional - otherwise it will be done automatically
+    # when the garbage collector destroys the node object)
+    node.destroy_node()
+    rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()

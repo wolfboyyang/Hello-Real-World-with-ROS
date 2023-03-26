@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
-# This code has been adapted from the ROS Wiki actionlib tutorials to the context
-# of this course.
+# This code has been adapted from the ROS Wiki actionlib tutorials
+# to the context of this course.
 # (http://wiki.ros.org/hrwros_msgs/Tutorials)
 
 from hrwros_msgs.action import CounterWithDelay
@@ -11,7 +11,6 @@ from rclpy.action import ActionServer, CancelResponse, GoalResponse
 from rclpy.callback_groups import ReentrantCallbackGroup
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.node import Node
-
 
 class CounterWithDelayActionServer(Node):
 
@@ -50,22 +49,34 @@ class CounterWithDelayActionServer(Node):
         return CancelResponse.ACCEPT
     
     async def execute_callback(self, goal_handle):
-        # OPTIONAL: NOT GRADED Check if the parameter for the counter delay is available on the parameter server.
-        # if not self.has_param("<write your code here>"):
-        #     self.get_logger().info("Parameter %s not found on the parameter server. Using default value of 1.0s for counter delay.","counter_delay")
-        #     counter_delay_value = 1.0
-        # else:
-        # Get the parameter for delay between counts.
-        counter_delay_value = self.get_param("<write your code here>")
-        self.get_logger().info("Parameter %s was found on the parameter server. Using %fs for counter delay."%("counter_delay", counter_delay_value))
+        counter_delay_value = 1.0
+
+        #####################################################################
+        #  Assignment 3 - Part3                                             #
+        #  modify counter delay using "counter_delay" a private parameter.  #
+
+        if self.has_param("<write your code here>"):
+            counter_delay_value = self.get_param("<write your code here>")
+            self.get_logger.info("Parameter found on the parameter server "
+                          " Using %.1fs for counter delay." %
+                          (counter_delay_value))
+        else:
+            self.get_logger.info("Parameter not found on the parameter server "
+                          "Using default value of 1.0s for counter delay.")
+
+        # End of Assignment 3 - Part3                                       #
+        #####################################################################
 
         # Variable for delay
         # Keep in mind a rate is in units 1/sec or Hz
         # We convert the counter_delay_value from seconds to Hz
-        delay_rate = self.create_rate(1/counter_delay_value)
+        delay_rate = rospy.Rate(1 / counter_delay_value)
 
         # publish info to the console for the user
-        self.get_logger().info('%s action server is counting up to  %i with %fs delay between each count' % (self.get_name(), goal_handle.num_counts, counter_delay_value))
+        self.get_logger.info('%s action server is counting up to %i '
+                      'with %.1fs delay between each count' %
+                      (self.get_name(), goal_handle.num_counts,
+                       counter_delay_value))
 
         feedback_msg = CounterWithDelay.Feedback()
 
@@ -77,8 +88,10 @@ class CounterWithDelayActionServer(Node):
                 self.get_logger().info('Goal canceled')
                 return CounterWithDelay.Result()
 
-            # Publish the feedback
+            # Update counts
             feedback_msg.counts_elapsed = i
+
+            # Publish the feedback
             goal_handle.publish_feedback(feedback_msg)
             # Wait for counter_delay seconds before incrementing the counter.
             # If the rate is 5Hz, this will sleep for 1/5=0.2 seconds.
@@ -88,7 +101,7 @@ class CounterWithDelayActionServer(Node):
 
         # Populate result message
         result = CounterWithDelay.Result()
-        reslut.result_message = "Successfully completed counting."
+        reslut.result_message = f'Successfully completed counting: {feedback_msg.counts_elapsed}'
         self.get_logger().info('%s: Succeeded' % self.get_name())
 
         return result

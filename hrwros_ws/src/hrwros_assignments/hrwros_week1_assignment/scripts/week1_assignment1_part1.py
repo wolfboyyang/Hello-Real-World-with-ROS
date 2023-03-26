@@ -45,24 +45,23 @@
 import rospy
 
 # Import the correct type of message
-from hrwros_msgs.msg import <write-your-code-here-Part1>
+from hrwros_msgs.msg import SensorInformation
 
 
 def sensor_info_callback(data):
 
     # Compute the height of the box from the sensor reading.
     # Tip: You need to substract the reading from the max_range of the sensor.
-    height_box = <write-your-code-here-Part1>
-
+    height_box = data.sensor_data
     # Compute the height of the box.
     # Boxes that are detected to be shorter than 0.1m are due to sensor noise.
     # Do not publish information about them.
-    if <write-your-code-here-Part1>:
+    if height_box.range < 0.1 or height_box.range > 1.9:
         pass
     else:
         # If imlemented correctly only the height of boxes bigger than 0.1m
         # will be printed
-        rospy.loginfo('Height of box %0.3f' % height_box)
+        rospy.loginfo('Height of box %0.3f' % height_box.range)
 
 
 if __name__ == '__main__':
@@ -70,12 +69,12 @@ if __name__ == '__main__':
     rospy.init_node('compute_box_height', anonymous=False)
 
     # Wait for the topic that publishes sensor information to become available - Part1
-    rospy.loginfo('Waiting for topic %s to be published...', <use the correct topic name here>)
-    rospy.wait_for_message('<use the correct topic name here>', <use the correct message type here>)
-    rospy.loginfo('%s topic is now available!', <use the correct topic name here>)
+    rospy.loginfo('Waiting for topic %s to be published...', '/sensor_info')
+    rospy.wait_for_message('/sensor_info', SensorInformation)
+    rospy.loginfo('%s topic is now available!', '/sensor_info')
 
     # Create the subscriber for Part1 here
-    rospy.Subscriber('<use correct topic name here>', <use correct message type here>, <use the correct callback name here>)
+    rospy.Subscriber('/sensor_info', SensorInformation, sensor_info_callback)
 
     # Prevent this code from exiting until Ctrl+C is pressed.
     rospy.spin()

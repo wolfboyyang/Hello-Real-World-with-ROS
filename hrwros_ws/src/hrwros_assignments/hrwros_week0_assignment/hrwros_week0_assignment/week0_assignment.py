@@ -64,14 +64,17 @@ def main(args=None):
     timer_period = 1 # seconds
     timer = node.create_timer(timer_period, timer_callback)
 
-    rclpy.spin(node)
-
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        node.get_logger().info('KeyboardInterrupt, shutting down.\n')
+    
     # Destroy the timer attached to the node explicitly
     # (optional - otherwise it will be done automatically
     # when the garbage collector destroys the node object)
     node.destroy_timer(timer)
     node.destroy_node()
-    rclpy.shutdown()
+    rclpy.try_shutdown()
 
 
 if __name__ == '__main__':

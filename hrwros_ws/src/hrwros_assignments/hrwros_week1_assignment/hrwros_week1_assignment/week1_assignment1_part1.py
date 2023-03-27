@@ -48,7 +48,7 @@ import rclpy
 from hrwros_msgs.msg import SensorInformation
 
 
-def sensor_info_callback(data, node):
+def sensor_info_callback(data):
     # Compute the height of the box from the sensor reading.
     # Tip: You need to substract the reading from the max_range of the sensor.
     height_box = data.sensor_data
@@ -61,14 +61,16 @@ def sensor_info_callback(data, node):
     else:
         # If imlemented correctly only the height of boxes bigger than 0.1m
         # will be printed
-        node.get_logger().info('Height of box %0.3f' % height_box.range)
+        g_node.get_logger().info('Height of box %0.3f' % height_box.range)
 
 
 def main(args=None):
+    global g_node
+
     rclpy.init(args=args)
 
     # Initialize the ROS node here.
-    node = rclpy.create_node('compute_box_height')
+    g_node = rclpy.create_node('compute_box_height')
 
     # Wait for the topic that publishes sensor information to become available - Part1
     # node.get_logger().info('Waiting for topic %s to be published...' % '/sensor_info')
@@ -77,19 +79,19 @@ def main(args=None):
     # node.get_logger().info('%s topic is now available!' % '/sensor_info')
 
     # Create the subscriber for Part1 here
-    subscription = node.create_subscription(SensorInformation, '/sensor_info', lambda data: sensor_info_callback(data, node), 10)
+    subscription = g_node.create_subscription(SensorInformation, '/sensor_info', sensor_info_callback, 10)
     subscription
 
     # Prevent this code from exiting until Ctrl+C is pressed.
     try:
-        rclpy.spin(node)
+        rclpy.spin(g_node)
     except KeyboardInterrupt:
-        node.get_logger().info('KeyboardInterrupt, shutting down.\n')
+        g_node.get_logger().info('KeyboardInterrupt, shutting down.\n')
 
     # Destroy the node explicitly
     # (optional - otherwise it will be done automatically
     # when the garbage collector destroys the node object)
-    node.destroy_node()
+    g_node.destroy_node()
     rclpy.try_shutdown()
 
 

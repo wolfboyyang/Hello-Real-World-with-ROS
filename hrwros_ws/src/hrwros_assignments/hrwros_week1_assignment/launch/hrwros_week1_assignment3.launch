@@ -2,7 +2,7 @@
 <launch>
   <!-- Argument to the launch file.-->
   <!-- Change the default value as instructed in Part 2-->
-  <arg name="counter_delay_parameter" default="1.0"/>
+  <arg name="counter_delay_parameter" default="2.0"/>
 
   <!-- Start the metres_to_feet service server node.-->
   <node name="metres_to_feet" pkg="hrwros_week1" type="metres_to_feet_server.py" output="screen"/>

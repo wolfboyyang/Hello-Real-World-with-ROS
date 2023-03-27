@@ -44,47 +44,46 @@
 # All necessary python imports go here.
 import rclpy
 # Copy the code from Part1 here
-from hrwros_msgs.msg import <write-your-code-here-Part1>
+from hrwros_msgs.msg import SensorInformation
 # Import the correct message type for part 3
-from hrwros_week1_assignment_interfaces.msg import <write-your-code-here-Part3>
-
-g_node = None
+from hrwros_week1_assignment_interfaces.msg import BoxHeightInformation
 
 
 def sensor_info_callback(data, bhi_publisher):
 
     # Copy the code from Part1 here
-    height_box = <write-your-code-here-Part1>
+    height_box = data.sensor_data
 
     # Compute the height of the box.
     # Boxes that are detected to be shorter than 10cm are due to sensor noise.
     # Do not publish information about them.
     # Copy the code from Part1 here
-    if <write-your-code-here-Part1>:
+    if height_box.range < 0.1 or height_box.range > 1.9:
         pass
     else:
         # Declare a message object for publishing the box height information.
-        box_height_info = <write-your-code-here-Part3>
+        box_height_info = BoxHeightInformation()
         # Update height of box.
-        <write-your-code-here-Part3>
+        box_height_info.box_height = height_box.range
         # Publish box height using the publisher argument passed to the
         # callback function.
-        <write-your-code-here-Part3>
+        bhi_publisher.publish(box_height_info)
 
 
 def main(args=None):
     rclpy.init(args=args)
 
     # Initialize the ROS node here.
-    g_node = rclpy.create_node('compute_box_height')
+    node = rclpy.create_node('compute_box_height')
 
     # Copy the code from Part1 here
-    g_node.get_logger.info('Waiting for topic %s to be published...', <use the correct topic name here>)
-    rclpy.wait_for_message(<use the correct message type here>, node, '<use the correct topic name here>')
-    g_node.get_logger.info('%s topic is now available!', <use the correct topic name here>)
+    # rclpy.wait_for_message only avaibable in ROS2 rolling
+    # node.get_logger.info('Waiting for topic %s to be published...', '/sensor_info')
+    # rclpy.wait_for_message(SensorInformation, node, '/sensor_info')
+    # node.get_logger().info('%s topic is now available!', '/sensor_info')
 
     # Create the publisher for Part3 here
-    bhi_publisher = node.create_publisher(<use correct message type here>, '<use correct topic name here>', 10)
+    bhi_publisher = node.create_publisher(BoxHeightInformation, '/box_height_info', 10)
 
     # Note here that an ADDITIONAL ARGUMENT (bhi_publisher) is passed to the
     # subscriber. This is a way to pass ONE additional argument to the
@@ -94,17 +93,20 @@ def main(args=None):
     # Implementation like we saw in the action server code illustration.
 
     # Copy the subscriber from Part1 here
-    subscription = node.create_subscription(<use correct message type here>, '<use correct topic name here>', <use the correct callback name here>, bhi_publisher)
+    subscription = node.create_subscription(SensorInformation, '/sensor_info', lambda data: sensor_info_callback(data, bhi_publisher), 10)
     subscription
 
     # Prevent this code from exiting until Ctrl+C is pressed.
-    rclpy.spin(node)
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        node.get_logger().info('KeyboardInterrupt, shutting down.\n')
 
     # Destroy the node explicitly
     # (optional - otherwise it will be done automatically
     # when the garbage collector destroys the node object)
     node.destroy_node()
-    rclpy.shutdown()
+    rclpy.try_shutdown()
 
 
 if __name__ == '__main__':

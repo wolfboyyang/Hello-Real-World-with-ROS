@@ -49,13 +49,13 @@ from hrwros_utilities.sim_sensor_data import distSensorData as getSensorData
 def main(args=None):
     rclpy.init(args=args)
     node = rclpy.create_node('sensor_info_publisher')
-    si_publisher = node.create_publisher(SensorInformation, 'sensor_info', 10)
+    si_publisher = node.create_publisher(SensorInformation, '/sensor_info', 10)
 
     # Create a new SensorInformation object and fill in its contents.
     sensor_info = SensorInformation()
 
     # Fill in the header information.
-    sensor_info.sensor_data.header.stamp = rospy.Time.now()
+    sensor_info.sensor_data.header.stamp = node.get_clock().now().to_msg()
     sensor_info.sensor_data.header.frame_id = 'distance_sensor_frame'
 
     # Fill in the sensor data information.
@@ -76,20 +76,22 @@ def main(args=None):
         # Publish the sensor information on the /sensor_info topic.
         si_publisher.publish(sensor_info)
         # Print log message if all went well.
-        rnode.get_logger().info('All went well. Publishing topic')
-        rate.sleep()
+        node.get_logger().info('All went well. Publishing topic')
 
     timer_period = 0.1  # seconds
     timer = node.create_timer(timer_period, timer_callback)
 
-    rclpy.spin(node)
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        node.get_logger().info('KeyboardInterrupt, shutting down.\n')
 
     # Destroy the timer attached to the node explicitly
     # (optional - otherwise it will be done automatically
     # when the garbage collector destroys the node object)
     node.destroy_timer(timer)
     node.destroy_node()
-    rclpy.shutdown()
+    rclpy.try_shutdown()
 
 
 if __name__ == '__main__':

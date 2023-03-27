@@ -45,51 +45,52 @@
 import rclpy
 
 # Import the correct type of message
-from hrwros_msgs.msg import <write-your-code-here-Part1>
-
-g_node = None
+from hrwros_msgs.msg import SensorInformation
 
 
-def sensor_info_callback(data):
-
+def sensor_info_callback(data, node):
     # Compute the height of the box from the sensor reading.
     # Tip: You need to substract the reading from the max_range of the sensor.
-    height_box = <write-your-code-here-Part1>
+    height_box = data.sensor_data
 
     # Compute the height of the box.
     # Boxes that are detected to be shorter than 0.1m are due to sensor noise.
     # Do not publish information about them.
-    if <write-your-code-here-Part1>:
+    if height_box.range < 0.1 or height_box.range > 1.9:
         pass
     else:
         # If imlemented correctly only the height of boxes bigger than 0.1m
         # will be printed
-        g_node.get_logger.loginfo('Height of box %0.3f' % height_box)
+        node.get_logger().info('Height of box %0.3f' % height_box.range)
 
 
 def main(args=None):
     rclpy.init(args=args)
 
     # Initialize the ROS node here.
-    g_node = rclpy.create_node('compute_box_height')
+    node = rclpy.create_node('compute_box_height')
 
     # Wait for the topic that publishes sensor information to become available - Part1
-    g_node.get_logger.info('Waiting for topic %s to be published...', <use the correct topic name here>)
-    rclpy.wait_for_message(<use the correct message type here>, node, '<use the correct topic name here>')
-    g_node.get_logger.info('%s topic is now available!', <use the correct topic name here>)
+    # node.get_logger().info('Waiting for topic %s to be published...' % '/sensor_info')
+    # rclpy.wait_for_message only avaibable in ROS2 rolling 
+    # rclpy.wait_for_message(SensorInformation, node, '/sensor_info')
+    # node.get_logger().info('%s topic is now available!' % '/sensor_info')
 
     # Create the subscriber for Part1 here
-    subscription = node.create_subscription(<use correct message type here>, '<use correct topic name here>', <use the correct callback name here>, bhi_publisher)
+    subscription = node.create_subscription(SensorInformation, '/sensor_info', lambda data: sensor_info_callback(data, node), 10)
     subscription
 
     # Prevent this code from exiting until Ctrl+C is pressed.
-    rclpy.spin(node)
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        node.get_logger().info('KeyboardInterrupt, shutting down.\n')
 
     # Destroy the node explicitly
     # (optional - otherwise it will be done automatically
     # when the garbage collector destroys the node object)
     node.destroy_node()
-    rclpy.shutdown()
+    rclpy.try_shutdown()
 
 
 if __name__ == '__main__':

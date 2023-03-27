@@ -51,7 +51,7 @@ def main(args=None):
     node = rclpy.create_node('sensor_info_subscriber')
 
     subscription = node.create_subscription(
-        SensorInformation, 'sensor_info',
+        SensorInformation, '/sensor_info',
         lambda data: node.get_logger().info('Distance reading from the sensor is: %f',
         data.sensor_data.range), 10)
     subscription  # prevent unused variable warning

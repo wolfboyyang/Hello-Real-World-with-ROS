@@ -71,6 +71,11 @@ def main(args=None):
     action_client.send_goal()
 
     rclpy.spin(action_client)
+    try:
+        rclpy.spin(action_client)
+    except KeyboardInterrupt:
+        action_client.get_logger().info('KeyboardInterrupt, shutting down.\n')
+
 
     
 if __name__ == '__main__':

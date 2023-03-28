@@ -103,10 +103,14 @@ def main(args=None):
     # Use a MultiThreadedExecutor to enable processing goals concurrently
     executor = MultiThreadedExecutor()
 
-    rclpy.spin(server, executor=executor)
+    try:
+        rclpy.spin(server, executor=executor)
+    except KeyboardInterrupt:
+        server.get_logger().info('KeyboardInterrupt, shutting down.\n')
+
 
     server.destroy()
-    rclpy.shutdown()
+    rclpy.try_shutdown()
 
 
 if __name__ == '__main__':

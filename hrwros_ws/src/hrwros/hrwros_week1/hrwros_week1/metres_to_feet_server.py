@@ -3,7 +3,7 @@
 # of this course.
 # (http://wiki.ros.org/ROS/Tutorials/WritingServiceClient%28python%29)
 
-from hrwros_msgs.srv import ConvertMetresToFeet, ConvertMetresToFeetRequest, ConvertMetresToFeetResponse
+from hrwros_msgs.srv import ConvertMetresToFeet
 
 import rclpy
 
@@ -14,22 +14,19 @@ _CONVERSION_FACTOR_METRES_TO_FEET = 3.28 # Metres -> Feet conversion factor.
 g_node = None
 
 # Service callback function.
-def process_service_request(req):
-
-    # Instantiate the response message object.
-    res = ConvertMetresToFeetResponse()
+def process_service_request(request, response):
 
     # Perform sanity check. Allow only positive real numbers.
     # Compose the response message accordingly.
-    if(req.distance_metres < 0):
-        res.success = False
-        res.distance_feet = -np.Inf # Default error value.
+    if(request.distance_metres < 0):
+        response.success = False
+        response.distance_feet = -np.Inf # Default error value.
     else:
-        res.distance_feet = _CONVERSION_FACTOR_METRES_TO_FEET * req.distance_metres
-        res.success = True
+        response.distance_feet = _CONVERSION_FACTOR_METRES_TO_FEET * request.distance_metres
+        response.success = True
 
     # Return the response message.
-    return res
+    return response
 
 
 def main(args=None):
@@ -45,13 +42,16 @@ def main(args=None):
     # Log message about service availability.
     g_node.get_logger().info('Convert metres to feet service is now available.')
 
-    rclpy.spin(g_node)
+    try:
+        rclpy.spin(g_node)
+    except KeyboardInterrupt:
+        g_node.get_logger().info('KeyboardInterrupt, shutting down.\n')
 
     # Destroy the service attached to the node explicitly
     # (optional - otherwise it will be done automatically
     # when the garbage collector destroys the node object)
     g_node.destroy_service(srv)
-    rclpy.shutdown()
+    rclpy.try_shutdown()
 
 
 if __name__ == "__main__":

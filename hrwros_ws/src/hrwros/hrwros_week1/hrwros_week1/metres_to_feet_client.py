@@ -19,15 +19,17 @@ def metres_to_feet_client(x):
         g_node.get_logger().info('Waiting for service...')
     
     # Create a service request.
-    req = ConvertMetresToFeet.Request()
-    req.distance_metres = x
+    request = ConvertMetresToFeet.Request()
+    request.distance_metres = x
     # Call the service here.
-    future = cli.call_async(req)
-    rclpy.spin_until_future_complete(g_node, future)
-
-    service_response = future.result()
-    # Return the response to the calling function.
-    return service_response
+    future = cli.call_async(request)
+    while rclpy.ok():
+        g_node.get_logger().info('spin once for service responce...')
+        rclpy.spin_once(g_node)
+        if future.done():
+            service_response = future.result()
+            # Return the response to the calling function.
+            return service_response
 
 
 def main(args=None):

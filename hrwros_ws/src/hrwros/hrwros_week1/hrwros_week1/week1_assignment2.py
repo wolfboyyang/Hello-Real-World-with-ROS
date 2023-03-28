@@ -6,7 +6,7 @@
 
 import rclpy
 
-from hrwros_msgs.srv import ConvertMetresToFeet, ConvertMetresToFeetRequest, ConvertMetresToFeetResponse
+from hrwros_msgs.srv import ConvertMetresToFeet
 
 g_node = None
 
@@ -28,6 +28,8 @@ def box_height_info(data):
     return service_response
 
 def main(args=None):
+    global g_node
+
     rclpy.init(args=args)
 
     # Initialize the ROS node here.

@@ -54,13 +54,16 @@ def main(args=None):
         String, 'topic_1', lambda msg: node.get_logger().info('%s' % msg.data), 10)
     subscription  # prevent unused variable warning
 
-    rclpy.spin(node)
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        node.get_logger().info('KeyboardInterrupt, shutting down.\n')
 
     # Destroy the node explicitly
     # (optional - otherwise it will be done automatically
     # when the garbage collector destroys the node object)
     node.destroy_node()
-    rclpy.shutdown()
+    rclpy.try_shutdown()
 
 
 if __name__ == '__main__':

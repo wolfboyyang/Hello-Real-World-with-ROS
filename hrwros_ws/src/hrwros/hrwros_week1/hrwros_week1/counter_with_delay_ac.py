@@ -7,7 +7,7 @@ import rclpy
 from rclpy.action import ActionClient
 from rclpy.node import Node
 
-def CounterWithDelayActionClient(Node):
+class CounterWithDelayActionClient(Node):
 
     def __init__(self):
         # Creates the SimpleActionClient, passing the type of the action
@@ -38,7 +38,7 @@ def CounterWithDelayActionClient(Node):
             self.get_logger().info('Goal failed with status: {0}'.format(status))
 
         # Shutdown after receiving a result
-        rclpy.shutdown()
+        rclpy.try_shutdown()
 
     def send_goal(self):
         # Waits until the action server has started up and started
@@ -70,7 +70,6 @@ def main(args=None):
 
     action_client.send_goal()
 
-    rclpy.spin(action_client)
     try:
         rclpy.spin(action_client)
     except KeyboardInterrupt:

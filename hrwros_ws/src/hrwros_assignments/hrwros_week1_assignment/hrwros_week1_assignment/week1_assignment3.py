@@ -18,6 +18,8 @@ class CounterWithDelayActionServer(Node):
         # This will be the name of the action server which clients can use to connect to.
         super().__init__('counter_with_delay_action_server')
 
+        self.declare_parameter("counter_delay", 1.0)
+
         # Create a simple action server of the newly defined action type and
         # specify the execute callback where the goal will be processed.
         self._action_server = ActionServer(
@@ -30,8 +32,7 @@ class CounterWithDelayActionServer(Node):
             cancel_callback=self.cancel_callback)
 
         # Start the action server.
-        self._as.start()
-        rospy.loginfo("Action server started...")
+        self.get_logger().info("Action server started...")
 
     def destroy(self):
         self._action_server.destroy()
@@ -55,13 +56,13 @@ class CounterWithDelayActionServer(Node):
         #  Assignment 3 - Part3                                             #
         #  modify counter delay using "counter_delay" a private parameter.  #
 
-        if self.has_param("<write your code here>"):
-            counter_delay_value = self.get_param("<write your code here>")
-            self.get_logger.info("Parameter found on the parameter server "
+        if self.has_parameter("counter_delay"):
+            counter_delay_value = self.get_parameter("counter_delay").value
+            self.get_logger().info("Parameter found on the parameter server "
                           " Using %.1fs for counter delay." %
                           (counter_delay_value))
         else:
-            self.get_logger.info("Parameter not found on the parameter server "
+            self.get_logger().info("Parameter not found on the parameter server "
                           "Using default value of 1.0s for counter delay.")
 
         # End of Assignment 3 - Part3                                       #
@@ -70,12 +71,12 @@ class CounterWithDelayActionServer(Node):
         # Variable for delay
         # Keep in mind a rate is in units 1/sec or Hz
         # We convert the counter_delay_value from seconds to Hz
-        delay_rate = rospy.Rate(1 / counter_delay_value)
+        delay_rate = self.create_rate(1 / counter_delay_value)
 
         # publish info to the console for the user
-        self.get_logger.info('%s action server is counting up to %i '
+        self.get_logger().info('%s action server is counting up to %i '
                       'with %.1fs delay between each count' %
-                      (self.get_name(), goal_handle.num_counts,
+                      (self.get_name(), goal_handle.request.num_counts,
                        counter_delay_value))
 
         feedback_msg = CounterWithDelay.Feedback()
@@ -101,7 +102,7 @@ class CounterWithDelayActionServer(Node):
 
         # Populate result message
         result = CounterWithDelay.Result()
-        reslut.result_message = f'Successfully completed counting: {feedback_msg.counts_elapsed}'
+        result.result_message = f'Successfully completed counting: {feedback_msg.counts_elapsed}'
         self.get_logger().info('%s: Succeeded' % self.get_name())
 
         return result
@@ -116,10 +117,13 @@ def main(args=None):
     # Use a MultiThreadedExecutor to enable processing goals concurrently
     executor = MultiThreadedExecutor()
 
-    rclpy.spin(server, executor=executor)
+    try:
+        rclpy.spin(server, executor=executor)
+    except KeyboardInterrupt:
+        server.get_logger().info('KeyboardInterrupt, shutting down.\n')
 
     server.destroy()
-    rclpy.shutdown()
+    rclpy.try_shutdown()
 
 
 if __name__ == '__main__':

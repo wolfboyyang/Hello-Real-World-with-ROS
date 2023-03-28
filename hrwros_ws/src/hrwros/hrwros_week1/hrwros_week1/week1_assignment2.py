@@ -12,19 +12,19 @@ g_node = None
 
 
 def box_height_info(data):
-    cli = g_node.create_client(use the correct message type here>, '<use the correct service name here>')
+    cli = g_node.create_client('use the correct message type here>', '<use the correct service name here>')
     # First wait for the service to become available.
     while not cli.wait_for_service(timeout_sec=1.0):
         g_node.get_logger().info('Waiting for service...')
     
     # Create a proxy for the service to convert metres to feet.
-    box_height_info = rospy.ServiceProxy(<update the correct details here>)
+    box_height_info = rospy.ServiceProxy('<update the correct details here>')
 
     # Call the service here.
-    service_response = <write your code here>
+    service_response = '<write your code here>'
 
     # Write a log message here to print the height of this box in feet.
-    <write your code here>
+    '<write your code here>'
     return service_response
 
 def main(args=None):

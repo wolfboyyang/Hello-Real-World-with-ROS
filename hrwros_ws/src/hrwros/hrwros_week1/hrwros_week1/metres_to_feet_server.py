@@ -50,7 +50,7 @@ def main(args=None):
     # Destroy the service attached to the node explicitly
     # (optional - otherwise it will be done automatically
     # when the garbage collector destroys the node object)
-    g_node.destroy_service(srv)
+    g_node.destroy_service(service)
     rclpy.try_shutdown()
 
 

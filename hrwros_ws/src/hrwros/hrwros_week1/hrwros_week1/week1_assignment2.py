@@ -5,44 +5,65 @@
 # service to convert this height in metres to height in feet.
 
 import rclpy
+from rclpy.node import Node
+from rclpy.callback_groups import ReentrantCallbackGroup
 
 from hrwros_msgs.srv import ConvertMetresToFeet
+from hrwros_week1_assignment_interfaces.msg import BoxHeightInformation
 
-g_node = None
 
+class BoxHeightInFeetNode(Node):
 
-def box_height_info(data):
-    cli = g_node.create_client('use the correct message type here>', '<use the correct service name here>')
-    # First wait for the service to become available.
-    while not cli.wait_for_service(timeout_sec=1.0):
-        g_node.get_logger().info('Waiting for service...')
-    
-    # Create a proxy for the service to convert metres to feet.
-    box_height_info = rospy.ServiceProxy('<update the correct details here>')
+    def __init__(self):
+        super().__init__('box_height_in_feet')
 
-    # Call the service here.
-    service_response = '<write your code here>'
+        self.callback_group = ReentrantCallbackGroup()
 
-    # Write a log message here to print the height of this box in feet.
-    '<write your code here>'
-    return service_response
+        self.subscription = self.create_subscription(
+            '<write your code here:Type>', '<write your code here>:Topic',
+            '<write your code here>:Callback', 10, callback_group=self.callback_group)
+
+        # Create a proxy for the service to convert metres to feet.
+        self.cli = self.create_client('<write your code here>:Type', '<write your code here>:Name',
+            callback_group=self.callback_group)
+        
+        # First wait for the service to become available.
+        while not self.cli.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info('Waiting for service...')
+        
+    async def box_height_info_callback(self, data):
+        # Create a service request.
+        request = ConvertMetresToFeet.Request()
+        request.distance_metres = data.box_height
+        
+        response = await self.cli.call_async(request)
+
+        # Process the service response and display log messages accordingly.
+        if(not response.success):
+            self.get_logger().err("Conversion unsuccessful! Requested distance in metres should be a positive real number.")
+        else:
+            # Write a log message here to print the height of this box in feet.
+            self.get_logger().info('The height of this box (%.3fm) in feet is %.3fft'
+                % (data.box_height, response.distance_feet))
+
 
 def main(args=None):
-    global g_node
-
     rclpy.init(args=args)
 
     # Initialize the ROS node here.
-    g_node = rclpy.create_node('box_height_in_feet')
+    node = BoxHeightInFeetNode()
 
-    # Call the service client function to get to the box height.
-    service_response = box_height_info(dist_metres)
+    # Prevent this code from exiting until Ctrl+C is pressed.
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        node.get_logger().info('KeyboardInterrupt, shutting down.\n')
 
-    # Process the service response and display log messages accordingly.
-    if(not service_response.success):
-         g_node.get_logger().err("Conversion unsuccessful! Requested distance in metres should be a positive real number.")
-    else:
-        g_node.get_logger().info("Conversion successful!")
+    # Destroy the node explicitly
+    # (optional - otherwise it will be done automatically
+    # when the garbage collector destroys the node object)
+    node.destroy_node()
+    rclpy.try_shutdown()
 
 
 if __name__ == '__main__':

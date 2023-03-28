@@ -38,23 +38,18 @@
 # publishes information on the box height in metres and use the metres_to_feet
 # service to convert this height in metres to height in feet.
 
-from threading import Event
-
 import rclpy
 from rclpy.node import Node
 from rclpy.callback_groups import ReentrantCallbackGroup
-from rclpy.executors import MultiThreadedExecutor, SingleThreadedExecutor
 
 from hrwros_msgs.srv import ConvertMetresToFeet
 from hrwros_week1_assignment_interfaces.msg import BoxHeightInformation
 
-g_node = None
 
 class BoxHeightInFeetNode(Node):
 
     def __init__(self):
         super().__init__('box_height_in_feet')
-        self.service_done_event = Event()
 
         self.callback_group = ReentrantCallbackGroup()
 
@@ -70,31 +65,20 @@ class BoxHeightInFeetNode(Node):
         while not self.cli.wait_for_service(timeout_sec=1.0):
             self.get_logger().info('Waiting for service...')
         
-    def box_height_info_callback(self, data):
+    async def box_height_info_callback(self, data):
         # Create a service request.
         request = ConvertMetresToFeet.Request()
         request.distance_metres = data.box_height
-        # Call the service here.
-        event=Event()
-
-        def done_callback(future):
-            nonlocal event
-            event.set()
         
-        future = self.cli.call_async(request)
-        future.add_done_callback(done_callback)
-
-        event.wait()
-    
-        service_response = future.result()
+        response = await self.cli.call_async(request)
 
         # Process the service response and display log messages accordingly.
-        if(not service_response.success):
+        if(not response.success):
             self.get_logger().err("Conversion unsuccessful! Requested distance in metres should be a positive real number.")
         else:
             # Write a log message here to print the height of this box in feet.
             self.get_logger().info('The height of this box (%.3fm) in feet is %.3fft'
-                % (data.box_height, service_response.distance_feet))
+                % (data.box_height, response.distance_feet))
 
 
 def main(args=None):
@@ -103,11 +87,9 @@ def main(args=None):
     # Initialize the ROS node here.
     node = BoxHeightInFeetNode()
 
-    executor = MultiThreadedExecutor()
-
     # Prevent this code from exiting until Ctrl+C is pressed.
     try:
-        rclpy.spin(node, executor)
+        rclpy.spin(node)
     except KeyboardInterrupt:
         node.get_logger().info('KeyboardInterrupt, shutting down.\n')
 

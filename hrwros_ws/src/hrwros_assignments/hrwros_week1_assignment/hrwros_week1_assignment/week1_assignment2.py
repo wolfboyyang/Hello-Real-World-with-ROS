@@ -38,44 +38,84 @@
 # publishes information on the box height in metres and use the metres_to_feet
 # service to convert this height in metres to height in feet.
 
-import rclpy
+from threading import Event
 
-from hrwros_msgs.srv import ConvertMetresToFeet, ConvertMetresToFeetRequest, ConvertMetresToFeetResponse
+import rclpy
+from rclpy.node import Node
+from rclpy.callback_groups import ReentrantCallbackGroup
+from rclpy.executors import MultiThreadedExecutor, SingleThreadedExecutor
+
+from hrwros_msgs.srv import ConvertMetresToFeet
+from hrwros_week1_assignment_interfaces.msg import BoxHeightInformation
 
 g_node = None
 
+class BoxHeightInFeetNode(Node):
 
-def box_height_info(data):
-    cli = g_node.create_client(use the correct message type here>, '<use the correct service name here>')
-    # First wait for the service to become available.
-    while not cli.wait_for_service(timeout_sec=1.0):
-        g_node.get_logger().info('Waiting for service...')
+    def __init__(self):
+        super().__init__('box_height_in_feet')
+        self.service_done_event = Event()
+
+        self.callback_group = ReentrantCallbackGroup()
+
+        self.subscription = self.create_subscription(
+            BoxHeightInformation, 'box_height_info',
+            self.box_height_info_callback, 10, callback_group=self.callback_group)
+
+        # Create a proxy for the service to convert metres to feet.
+        self.cli = self.create_client(ConvertMetresToFeet, 'metres_to_feet',
+            callback_group=self.callback_group)
+        
+        # First wait for the service to become available.
+        while not self.cli.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info('Waiting for service...')
+        
+    def box_height_info_callback(self, data):
+        # Create a service request.
+        request = ConvertMetresToFeet.Request()
+        request.distance_metres = data.box_height
+        # Call the service here.
+        event=Event()
+
+        def done_callback(future):
+            nonlocal event
+            event.set()
+        
+        future = self.cli.call_async(request)
+        future.add_done_callback(done_callback)
+
+        event.wait()
     
-    # Create a proxy for the service to convert metres to feet.
-    box_height_info = rospy.ServiceProxy(<update the correct details here>)
+        service_response = future.result()
 
-    # Call the service here.
-    service_response = <write your code here>
-
-    # Write a log message here to print the height of this box in feet.
-    <write your code here>
-    return service_response
+        # Process the service response and display log messages accordingly.
+        if(not service_response.success):
+            self.get_logger().err("Conversion unsuccessful! Requested distance in metres should be a positive real number.")
+        else:
+            # Write a log message here to print the height of this box in feet.
+            self.get_logger().info('The height of this box (%.3fm) in feet is %.3fft'
+                % (data.box_height, service_response.distance_feet))
 
 
 def main(args=None):
     rclpy.init(args=args)
 
     # Initialize the ROS node here.
-    g_node = rclpy.create_node('box_height_in_feet')
+    node = BoxHeightInFeetNode()
 
-    # Call the service client function to get to the box height.
-    service_response = box_height_info(dist_metres)
+    executor = MultiThreadedExecutor()
 
-    # Process the service response and display log messages accordingly.
-    if(not service_response.success):
-         g_node.get_logger().err("Conversion unsuccessful! Requested distance in metres should be a positive real number.")
-    else:
-        g_node.get_logger().info("Conversion successful!")
+    # Prevent this code from exiting until Ctrl+C is pressed.
+    try:
+        rclpy.spin(node, executor)
+    except KeyboardInterrupt:
+        node.get_logger().info('KeyboardInterrupt, shutting down.\n')
+
+    # Destroy the node explicitly
+    # (optional - otherwise it will be done automatically
+    # when the garbage collector destroys the node object)
+    node.destroy_node()
+    rclpy.try_shutdown()
 
 
 if __name__ == '__main__':

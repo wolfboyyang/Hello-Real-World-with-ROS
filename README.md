@@ -67,6 +67,7 @@ For wsl, make sure you upgrade to win11 to enable the GUI integration. And for n
 in your hrwros_ws folder,
 ```sh
     rosdep install --from-paths src --ignore-src -r -y
+    catkin init
     catkin build
     source devel/setup.bash
     roslaunch hrwros_week1 hrwros_welcome.launch
@@ -83,6 +84,7 @@ For docker/podman, I tried in raspberry pi 4 with ubuntu server 22.04 for week1:
     apt install python3-catkin-tools
     cd /hrwros_ws
     rosdep install --from-paths src --ignore-src -r -y
+    catkin init
     catkin build
     source devel/setup.bash
     roslaunch hrwros_week1 hrwros_welcome.launch

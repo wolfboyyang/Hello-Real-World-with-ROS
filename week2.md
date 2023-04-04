@@ -1,5 +1,10 @@
 # Week2 - Practical Assignment
 
+Note: new dependency: ros-noetic-ur-description
+
+could also get from https://github.com/ros-industrial/universal_robot/tree/melodic-devel/ur_description
+
+
 ## Practical Assignment 1
 
 **Add a new model to the factory.**

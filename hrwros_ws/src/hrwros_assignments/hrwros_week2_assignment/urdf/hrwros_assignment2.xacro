@@ -16,7 +16,7 @@
 
   <!-- Robot1 -->
   <xacro:include filename="$(find ur_description)/urdf/inc/ur10_macro.xacro"/>
-  <xacro:ur10_robot prefix="robot1_" joint_limited="true"/>
+  <xacro:ur10_robot prefix="robot1_" safety_limits="true"/>
 
   <!-- Vacuum Gripper1 -->
   <xacro:include filename="$(find hrwros_support)/urdf/vacuum_gripper/vacuum_gripper.urdf.xacro"/>
@@ -80,7 +80,7 @@
 
 
   <xacro:include filename="$(find ur_description)/urdf/inc/ur5_macro.xacro"/>
-  <xacro:ur5_robot prefix="robot2_" joint_limited="true"/>
+  <xacro:ur5_robot prefix="robot2_" safety_limits="true"/>
   <joint name="robot2-robot2_pedestal_joint" type="fixed">
     <parent link="robot2_pedestal_link" />
     <child link="robot2_base_link" />

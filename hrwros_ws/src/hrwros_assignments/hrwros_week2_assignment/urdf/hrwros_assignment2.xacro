@@ -92,7 +92,23 @@
 
   <!-- Add your solution to assignment 2 here -->
 
+  <link name="sphere_1_link">
+    <visual>
+      <origin xyz="0 0 0.4" />
+      <geometry>
+        <sphere radius="0.4" />
+      </geometry>
+      <material name="spehere_1_color">
+        <color rgba="0 ${110/255} 0 1" />
+      </material>
+    </visual>
+  </link>
 
+  <joint name="shpere_1_joint" type="fixed">
+    <origin xyz="5.8 -5 0" />
+    <parent link="world" />
+    <child link="sphere_1_link" />
+  </joint>
 
 
 

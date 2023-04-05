@@ -1,9 +1,14 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(hrwros_support)
 
-add_definitions(-std=c++11)
+find_package(ament_cmake REQUIRED)
 
-find_package(catkin REQUIRED)
+install(
+  DIRECTORY config launch meshes urdf
+  DESTINATION share/${PROJECT_NAME}
+)
 
-catkin_package()
+ament_export_dependencies(${THIS_PACKAGE_INCLUDE_DEPENDS})
+
+ament_package()
 

@@ -5,7 +5,7 @@
     output="screen"/>
 
   <!-- Start the BoxHeightInformation publisher node (Assignment 1 Part 3)-->
-  <node name="assignment1" pkg="hrwros_week1_assignment" exec="week1_assignment1_part3"
+  <node name="assignment1" pkg="hrwros_week1_assignment" exec="sensor_info_publisher"
     output="screen"/>
 
   <!-- Start the metres_to_feet service server ROS node.-->

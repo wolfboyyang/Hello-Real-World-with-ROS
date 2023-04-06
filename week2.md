@@ -1,6 +1,6 @@
 # Week2 - Practical Assignment
 
-Note: new dependency: ros-humble-ur-description
+Note: new dependency: ros-humble-ur-description, ros-humble-joint-state-publisher, ros-humble-joint-state-publisher-gui
 
 could also get from https://github.com/UniversalRobots/Universal_Robots_ROS2_Description
 

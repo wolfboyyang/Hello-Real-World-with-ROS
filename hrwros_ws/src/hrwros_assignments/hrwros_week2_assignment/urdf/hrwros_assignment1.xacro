@@ -16,8 +16,9 @@
 
 
   <!-- Robot1 -->
-  <xacro:include filename="$(find ur_description)/urdf/inc/ur10_macro.xacro"/>
-  <xacro:ur10_robot prefix="robot1_" safety_limits="true"/>
+  <xacro:include filename="$(find hrwros_support)/urdf/ur.urdf.xacro" />
+  <xacro:simple_ur_robot name="robot1" ur_type="ur10" prefix="robot1_" parent="robot1_parent_link" safety_limits="true" />
+  <link name="robot1_parent_link" />
 
   <!-- Vacuum Gripper1 -->
   <xacro:include filename="$(find hrwros_support)/urdf/vacuum_gripper/vacuum_gripper.urdf.xacro"/>
@@ -44,7 +45,7 @@
   <joint name="robot1_to_pedestal" type="fixed">
   <origin xyz="0 0 0.95" rpy="0 0 0" />
   <parent link="robot1_pedestal_link" />
-  <child link="robot1_base_link" />
+  <child link="robot1_parent_link" />
   </joint>
 
   <!-- gripper1 to robot1. -->
@@ -79,11 +80,13 @@
     <child link="robot2_pedestal_link" />
   </joint>
 
-  <xacro:include filename="$(find ur_description)/urdf/inc/ur5_macro.xacro"/>
-  <xacro:ur5_robot prefix="robot2_" safety_limits="true"/>
+  <!-- Robot2 -->
+  <xacro:include filename="$(find hrwros_support)/urdf/ur.urdf.xacro" />
+  <xacro:simple_ur_robot name="robot1" ur_type="ur5" prefix="robot2_" parent="robot2_parent_link" safety_limits="true" />
+  <link name="robot2_parent_link" />
   <joint name="robot2-robot2_pedestal_joint" type="fixed">
     <parent link="robot2_pedestal_link" />
-    <child link="robot2_base_link" />
+    <child link="robot2_parent_link" />
     <origin xyz="0 0 0.6" rpy="0 0 ${radians(90)}" />
   </joint>
 

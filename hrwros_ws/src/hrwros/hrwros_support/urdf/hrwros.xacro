@@ -16,8 +16,9 @@
 
   <!-- Robot1 -->
   <xacro:include filename="$(find hrwros_support)/urdf/ur.urdf.xacro" />
-  <xacro:simple_ur_robot name="robot1" ur_type="ur10" prefix="robot1_" parent="robot1_parent_link" safety_limits="true" />
-  <link name="robot1_parent_link" />
+  <xacro:simple_ur_robot name="robot1" ur_type="ur10" prefix="robot1_" parent="robot1_pedestal_link" safety_limits="true">
+    <origin xyz="0 0 0.95" rpy="0 0 0" />
+  </xacro:simple_ur_robot>
 
   <!-- Vacuum Gripper1 -->
   <xacro:include filename="$(find hrwros_support)/urdf/vacuum_gripper/vacuum_gripper.urdf.xacro"/>
@@ -42,13 +43,6 @@
     <parent link="world_interface" />
     <child link="robot1_pedestal_link" />
     <origin xyz="0.5 1.8 0.0" rpy="0.0 0.0 0.0"/>
-  </joint>
-
-  <!-- robot1 to pedestal. -->
-  <joint name="robot1_to_pedestal" type="fixed">
-    <origin xyz="0 0 0.95" rpy="0 0 0" />
-    <parent link="robot1_pedestal_link" />
-    <child link="robot1_parent_link" />
   </joint>
 
   <!-- gripper1 to robot1. -->

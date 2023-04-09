@@ -8,7 +8,7 @@
     <xacro:property name="kinematics_params" default="$(find ur_description)/config/${ur_type}/default_kinematics.yaml"/>
     <xacro:property name="physical_params" default="$(find ur_description)/config/${ur_type}/physical_parameters.yaml"/>
     <xacro:property name="visual_params" default="$(find ur_description)/config/${ur_type}/visual_parameters.yaml"/>
-    <xacro:property name="initial_positions_file" default="$(find hrwros_support)/config/${prefix}initial_positions.yaml"/>
+    <xacro:property name="initial_positions_file" default="$(find ur_description)/config/initial_positions.yaml"/>
     <xacro:ur_robot
      name="${name}"
      prefix="${prefix}"

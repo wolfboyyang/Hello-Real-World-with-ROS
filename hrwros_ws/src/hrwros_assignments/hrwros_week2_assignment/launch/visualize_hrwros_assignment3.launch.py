@@ -10,8 +10,8 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     pkg_share = get_package_share_directory('hrwros_week2_assignment')
-    default_model_path = os.path.join(pkg_share, 'urdf/hrwros_assignment1.xacro')
-    default_rviz_config_path = os.path.join(pkg_share, 'config/assignment1.rviz')
+    default_model_path = os.path.join(pkg_share, 'urdf/hrwros_assignment3.xacro')
+    default_rviz_config_path = os.path.join(pkg_share, 'config/assignment3.rviz')
     config = os.path.join(
         pkg_share,
         'config',
@@ -45,7 +45,7 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        DeclareLaunchArgument(name='gui', default_value='False',
+        DeclareLaunchArgument(name='gui', default_value='True',
             description='Flag to enable joint_state_publisher_gui'),
         DeclareLaunchArgument(name='model', default_value=default_model_path,
            description='Absolute path to robot urdf file'),

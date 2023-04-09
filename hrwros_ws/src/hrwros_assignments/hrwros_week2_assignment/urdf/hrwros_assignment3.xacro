@@ -15,8 +15,10 @@
   </xacro:robot_pedestal_urdf>
 
   <!-- Robot1 -->
-  <xacro:include filename="$(find ur_description)/urdf/inc/ur10_macro.xacro"/>
-  <xacro:ur10_robot prefix="robot1_" safety_limits="true"/>
+  <xacro:include filename="$(find hrwros_support)/urdf/ur.urdf.xacro" />
+  <xacro:simple_ur_robot name="robot1" ur_type="ur10" prefix="robot1_" parent="robot1_pedestal_link" safety_limits="true">
+    <origin xyz="0 0 0.95" rpy="0 0 0" />
+  </xacro:simple_ur_robot>
 
   <!-- Vacuum Gripper1 -->
   <xacro:include filename="$(find hrwros_support)/urdf/vacuum_gripper/vacuum_gripper.urdf.xacro"/>

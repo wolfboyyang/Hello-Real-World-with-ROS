@@ -10,8 +10,8 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     pkg_share = get_package_share_directory('hrwros_week2_assignment')
-    default_model_path = os.path.join(pkg_share, 'urdf/hrwros_assignment1.xacro')
-    default_rviz_config_path = os.path.join(pkg_share, 'config/assignment1.rviz')
+    default_model_path = os.path.join(pkg_share, 'urdf/hrwros_assignment2.xacro')
+    default_rviz_config_path = os.path.join(pkg_share, 'config/assignment2.rviz')
     config = os.path.join(
         pkg_share,
         'config',
